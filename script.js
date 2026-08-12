@@ -195,6 +195,15 @@ function switchScreen(screenId) {
 function startGame() {
     initAudio(); // Initialize audio context on first user interaction
     playMusic('menu');
+    
+    // Reset hangman drawings (hide parts 5-10 for both players)
+    for (let p = 1; p <= 2; p++) {
+        for (let i = 5; i <= 10; i++) {
+            const part = document.getElementById(`p${p}-part-${i}`);
+            if (part) part.classList.remove('drawn');
+        }
+    }
+    
     state.setupPhase = 1;
     updateSetupScreen();
     switchScreen('setup');
@@ -667,8 +676,8 @@ function setExpression(player, expression, persistent = false) {
 }
 
 function drawHangman(player, mistakeNum) {
-    const container = document.getElementById(`hangman-p${player}`);
-    const part = container.querySelector(`.part-${mistakeNum}`);
+    const partId = `p${player}-part-${mistakeNum + 4}`;
+    const part = document.getElementById(partId);
     if (part) {
         part.classList.add('drawn');
     }
