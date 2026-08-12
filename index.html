@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>El Ahorcado de Chari y Fran</title>
+    <link rel="stylesheet" href="style.css?v=2">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&family=Luckiest+Guy&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <canvas id="particles-canvas"></canvas>
+    <canvas id="bg-canvas"></canvas>
+    <div id="game-wrapper">
+        <!-- Intro Video Splash -->
+        <section id="screen-video" style="position: absolute; width: 100%; height: 100%; background: black; z-index: 100; display: flex; justify-content: center; align-items: center;">
+            <video id="intro-video" style="width: 100%; height: 100%; object-fit: contain;" playsinline>
+                <source src="fotosconandroidgames.mp4" type="video/mp4">
+            </video>
+        </section>
+
+    <div id="app">
+        <!-- Intro Screen -->
+        <section id="screen-intro" class="screen">
+            <div class="intro-content">
+                <h1 class="glitch" data-text="EL AHORCADO">EL AHORCADO</h1>
+                <h2 class="subtitle">DE CHARI Y FRAN</h2>
+                <button class="btn primary mt-4" onclick="startGame()">Comenzar Duelo</button>
+            </div>
+        </section>
+
+        <!-- Setup Screen -->
+        <section id="screen-setup" class="screen">
+            <div class="setup-box glass-panel">
+                <h2 id="setup-title" class="glowing-text"></h2>
+                <p id="setup-instruction" class="instruction-text"></p>
+                <p class="warning-text">⚠️ El otro jugador no debe mirar la pantalla</p>
+                
+                <div class="input-group mt-4">
+                    <input type="password" id="word-input" placeholder="Escribe aquí..." autocomplete="off" maxlength="16">
+                    <button class="btn icon-btn" id="eye-btn" onmousedown="togglePassword(true)" onmouseup="togglePassword(false)" onmouseleave="togglePassword(false)">👁️</button>
+                </div>
+                <p id="setup-error" class="error-text"></p>
+                
+                <button class="btn primary mt-4" onclick="submitWord()">Confirmar Palabra</button>
+            </div>
+        </section>
+
+        <!-- Game Screen -->
+        <section id="screen-game" class="screen">
+            <div class="game-header glass-panel text-center">
+                <h2 id="turn-indicator" class="glowing-text">¡Preparaos!</h2>
+                <div id="turn-timer" class="timer">15</div>
+                <button class="btn solve-btn" onclick="attemptSolve()">🎯 Resolver Palabra</button>
+            </div>
+            
+            <div id="modifier-popup">
+                <div id="modifier-icon"></div>
+                <div id="modifier-text" class="modifier-title"></div>
+            </div>
+            
+            <div class="game-board">
+                <!-- Chari's area (guessing Fran's word) -->
+                <div id="player1-area" class="player-area glass-panel">
+                    <h3 class="player-name">CHARI</h3>
+                    <p class="guessing-text">Adivinando la palabra de Fran</p>
+                    <div class="player-content">
+                        <div class="hangman-container" id="hangman-p1">
+                            <svg viewBox="0 0 200 250" class="hangman-svg">
+                                <line class="part" id="p1-part-1" x1="20" y1="230" x2="180" y2="230" />
+                                <line class="part" id="p1-part-2" x1="50" y1="230" x2="50" y2="20" />
+                                <line class="part" id="p1-part-3" x1="50" y1="20" x2="130" y2="20" />
+                                <line class="part" id="p1-part-4" x1="130" y1="20" x2="130" y2="50" />
+                                <circle class="part" id="p1-part-5" cx="130" cy="80" r="30" />
+                                <line class="part" id="p1-part-6" x1="130" y1="110" x2="130" y2="170" />
+                                <line class="part" id="p1-part-7" x1="130" y1="130" x2="90" y2="100" />
+                                <line class="part" id="p1-part-8" x1="130" y1="130" x2="170" y2="100" />
+                                <line class="part" id="p1-part-9" x1="130" y1="170" x2="90" y2="220" />
+                                <line class="part" id="p1-part-10" x1="130" y1="170" x2="170" y2="220" />
+                            </svg>
+                        </div>
+                        <div class="character-container" id="char-p1">
+                            <div class="full-character-container">
+                                <div class="full-sprite" id="sprite-p1" style="background-image: url('chari_full_sprites.png');"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="word-display" id="word-p1"></div>
+                    <div class="status-msg" id="status-p1"></div>
+                </div>
+
+                <!-- Fran's area (guessing Chari's word) -->
+                <div id="player2-area" class="player-area glass-panel">
+                    <h3 class="player-name">FRAN</h3>
+                    <p class="guessing-text">Adivinando la palabra de Chari</p>
+                    <div class="player-content">
+                        <div class="hangman-container" id="hangman-p2">
+                            <svg viewBox="0 0 200 250" class="hangman-svg">
+                                <line class="part" id="p2-part-1" x1="20" y1="230" x2="180" y2="230" />
+                                <line class="part" id="p2-part-2" x1="50" y1="230" x2="50" y2="20" />
+                                <line class="part" id="p2-part-3" x1="50" y1="20" x2="130" y2="20" />
+                                <line class="part" id="p2-part-4" x1="130" y1="20" x2="130" y2="50" />
+                                <circle class="part" id="p2-part-5" cx="130" cy="80" r="30" />
+                                <line class="part" id="p2-part-6" x1="130" y1="110" x2="130" y2="170" />
+                                <line class="part" id="p2-part-7" x1="130" y1="130" x2="90" y2="100" />
+                                <line class="part" id="p2-part-8" x1="130" y1="130" x2="170" y2="100" />
+                                <line class="part" id="p2-part-9" x1="130" y1="170" x2="90" y2="220" />
+                                <line class="part" id="p2-part-10" x1="130" y1="170" x2="170" y2="220" />
+                            </svg>
+                        </div>
+                        <div class="character-container" id="char-p2">
+                            <div class="full-character-container">
+                                <div class="full-sprite" id="sprite-p2" style="background-image: url('fran_full_sprites.png');"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="word-display" id="word-p2"></div>
+                    <div class="status-msg" id="status-p2"></div>
+                </div>
+            </div>
+
+            <div class="keyboard glass-panel" id="keyboard"></div>
+
+            <div id="solve-overlay" class="glass-panel" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 50; padding: 40px; text-align: center; width: 80%; max-width: 700px; box-shadow: 0 0 50px rgba(0,255,170,0.5);">
+                <h2 id="solve-title" class="glowing-text" style="font-size: 3rem; margin-bottom: 20px;">¡Resuelve la palabra!</h2>
+                <input type="text" id="solve-input" class="modern-input" style="text-transform: uppercase; font-size: 3rem; text-align: center; margin-bottom: 20px;" placeholder="Escribe aquí..." autocomplete="off" maxlength="16">
+                <div style="display: flex; gap: 20px; justify-content: center; margin-top: 20px;">
+                    <button class="btn primary" onclick="submitSolve()" style="font-size: 2rem;">¡Resolver!</button>
+                    <button class="btn solve-btn" onclick="cancelSolve()" style="font-size: 2rem;">Cancelar</button>
+                </div>
+                <div id="solve-error" class="error-msg" style="font-size: 2rem; margin-top: 20px;"></div>
+            </div>
+        </section>
+
+        <!-- Result Screen -->
+        <section id="screen-result" class="screen">
+            <div id="disco-ball">🪩</div>
+            <div class="result-box glass-panel">
+                <h1 id="result-title" class="glowing-text text-xl">¡FIN DEL JUEGO!</h1>
+                <h2 id="result-subtitle" class="subtitle mt-4"></h2>
+                <div id="result-details" class="result-details mt-4"></div>
+                <button class="btn primary mt-4" onclick="resetGame()">Revancha</button>
+            </div>
+        </section>
+    </div>
+    </div>
+
+    <script src="script.js?v=2"></script>
+</body>
+</html>

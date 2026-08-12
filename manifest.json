@@ -1,0 +1,17 @@
+{
+  "name": "Ahorcado de Chari y Fran",
+  "short_name": "Ahorcado",
+  "start_url": ".",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#050510",
+  "theme_color": "#ffde59",
+  "icons": [
+    {
+      "src": "chari_sprites.jpg",
+      "sizes": "1024x1024",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}
