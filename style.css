@@ -682,3 +682,16 @@ input:focus { border-color: var(--primary-color); }
     box-shadow: 8px 8px 0 #000;
     margin-top: -20px;
 }
+
+/* Version Tag */
+.version-tag {
+    position: absolute;
+    bottom: 20px;
+    right: 30px;
+    font-family: var(--font-secondary);
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.5);
+    z-index: 10;
+    pointer-events: none;
+    text-shadow: 2px 2px 0 #000;
+}
